@@ -27,6 +27,10 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const loginWith = (provider) => {
+    window.location.href = route('social.login', provider);
+};
 </script>
 
 <template>
@@ -78,23 +82,31 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Forgot your password?
-                </Link>
+            <div class="mt-4 block">
 
                 <PrimaryButton
-                    class="ms-4"
+                    class="w-full p -3"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Log in
                 </PrimaryButton>
+
+                
             </div>
         </form>
+        
+        <button @click="loginWith('google')" class="bg-red-500 text-white px-4 py-2 rounded w-full mt-3">
+        Login with Google
+        </button>
+
+        
+        <Link
+            v-if="canResetPassword"
+            :href="route('password.request')"
+            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800 mt-4"
+        >
+            Forgot your password?
+        </Link>
     </GuestLayout>
 </template>
