@@ -16,10 +16,18 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+        // return createApp({ render: () => h(App, props) })
+        //     .use(plugin)
+        //     .use(ZiggyVue)
+        //     .mount(el);
+
+        const vueApp = createApp({
+            render: () => h(App, props) // Gunakan Options API
+        });
+
+        vueApp.use(plugin);
+        vueApp.use(ZiggyVue);
+        vueApp.mount(el);
     },
     progress: {
         color: '#4B5563',
