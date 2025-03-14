@@ -5,7 +5,7 @@
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                Data User
+                Parameter Uji
             </h2>
         </template>
 
@@ -15,7 +15,7 @@
 
                     <div class="p-4">
                         <button @click="openModal()" class="bg-blue-500 text-white px-4 py-2 rounded my-2">
-                            Tambah User
+                            Tambah
                         </button>
 
                         <div class="overflow-x-auto mt-4">
@@ -23,28 +23,26 @@
                                 <thead>
                                     <tr class="bg-slate-600">
                                         <th class="p-3 border-b border-t-2">No</th>
-                                        <th class="p-3 border-b border-t-2">Email</th>
                                         <th class="p-3 border-b border-t-2">Nama</th>
-                                        <th class="p-3 border-b border-t-2">Level</th>
-                                        <th class="p-3 border-b border-t-2">Provider</th>
-                                        <th class="p-3 border-b border-t-2">Provider ID</th>
+                                        <th class="p-3 border-b border-t-2">Satuan</th>
+                                        <th class="p-3 border-b border-t-2">Kadar Maksimum</th>
+                                        <th class="p-3 border-b border-t-2">Metode Uji</th>
                                         <th class="p-3 border-b border-t-2">Created at</th>
                                         <th class="p-3 border-b border-t-2">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in users.data" :key="user.id">
-                                        <td class="border-b p-2">{{ user.id }}</td>
-                                        <td class="border-b p-2">{{ user.name }}</td>
-                                        <td class="border-b p-2">{{ user.email }}</td>
-                                        <td class="border-b p-2">{{ user.level }}</td>
-                                        <td class="border-b p-2">{{ user.provider }}</td>
-                                        <td class="border-b p-2">{{ user.provider_id }}</td>
-                                        <td class="border-b p-2">{{ user.created_at }}</td>
+                                    <tr v-for="item in parameterUjis.data" :key="item.id">
+                                        <td class="border-b p-2">{{ item.id }}</td>
+                                        <td class="border-b p-2">{{ item.nama }}</td>
+                                        <td class="border-b p-2">{{ item.satuan }}</td>
+                                        <td class="border-b p-2">{{ item.kadar_maksimum_operator }} {{ item.kadar_maksimum_value }}</td>
+                                        <td class="border-b p-2">{{ item.metode_uji }}</td>
+                                        <td class="border-b p-2">{{ item.created_at }}</td>
                                         <td class="border-b p-2">
                                             <div class="flex">
-                                                <button @click="openModal(user)" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-                                                <button @click="deleteUser(user.id)" class="bg-red-500 text-white px-3 py-1 rounded ml-2">Hapus</button>
+                                                <button @click="openModal(item)" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+                                                <button @click="deleteUser(item.id)" class="bg-red-500 text-white px-3 py-1 rounded ml-2">Hapus</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -54,7 +52,7 @@
                     </div>
 
                     <div class="my-4 mx-4 flex gap-2">
-                        <button v-for="link in users.links" :key="link.label" @click="fetchData(link.url)"
+                        <button v-for="link in parameterUjis.links" :key="link.label" @click="fetchData(link.url)"
                             :disabled="!link.url" class="px-3 py-1 border rounded-md text-white"
                             :class="{ 'bg-gray-300': link.active, 'cursor-not-allowed': !link.url }"
                             v-html="link.label" />
@@ -74,19 +72,22 @@
                 <form @submit.prevent="saveUser">
                     <div class="mb-2">
                         <label class="block">Nama</label>
-                        <input v-model="form.name" type="text" class="w-full border px-3 py-2 rounded" required />
+                        <input v-model="form.nama" ref="inputNama" type="text" class="w-full border px-3 py-2 rounded" required />
                     </div>
                     <div class="mb-2">
-                        <label class="block">Email</label>
-                        <input v-model="form.email" type="email" class="w-full border px-3 py-2 rounded" required />
+                        <label class="block">Satuan</label>
+                        <input v-model="form.satuan" ref="inputsatuan" type="text" class="w-full border px-3 py-2 rounded" required />
                     </div>
                     <div class="mb-2">
-                        <label class="block">Password</label>
-                        <input v-model="form.password" type="password" class="w-full border px-3 py-2 rounded" />
+                        <label class="block">Kadar Maksimum</label>
+                        <div class="flex">
+                            <input v-model="form.kadar_maksimum_operator" ref="inputkadar_maksimum_operator" type="text" class="w-full border px-3 py-2 rounded-s-md" required />
+                            <input v-model="form.kadar_maksimum_value" ref="inputkadar_maksimum_value" type="text" class="w-full border px-3 py-2 rounded-e-md" required />
+                        </div>
                     </div>
                     <div class="mb-2">
-                        <label class="block">Level <small class="text-red-400">(admin, user)</small></label>
-                        <input v-model="form.level" type="text" class="w-full border px-3 py-2 rounded" required />
+                        <label class="block">Metode Uji</label>
+                        <input v-model="form.metode_uji" ref="inputmetode_uji" type="text" class="w-full border px-3 py-2 rounded" required />
                     </div>
 
                     <div class="flex justify-end gap-2">
@@ -111,7 +112,7 @@ export default {
         Head
     },
     props: {
-        users: Object,
+        parameterUjis: Object,
     },
     data() {
         return {
@@ -119,10 +120,11 @@ export default {
             isEdit: false,
             form: {
                 id: null,
-                name: "",
-                email: "",
-                password: "",
-                level: "",
+                nama: "",
+                satuan: "",
+                kadar_maksimum_operator: "",
+                kadar_maksimum_value: "",
+                metode_uji: "",
             },
         };
     },
@@ -131,11 +133,22 @@ export default {
             this.showModal = true;
             if (user) {
                 this.isEdit = true;
-                this.form = { ...user, password: "" }; // Tidak mengubah password
+                this.form = user;
             } else {
                 this.isEdit = false;
-                this.form = { id: null, name: "", email: "", password: "" };
+                this.form = { 
+                    id: null, 
+                    nama: "",
+                    satuan: "",
+                    kadar_maksimum_operator: "",
+                    kadar_maksimum_value: "",
+                    metode_uji: ""
+                };
             }
+
+            this.$nextTick(() => {
+                this.$refs.inputNama?.focus();
+            });
         },
         closeModal() {
             this.showModal = false;
@@ -147,18 +160,18 @@ export default {
         },
         saveUser() {
             if (this.isEdit) {
-                router.put(`/admin/user/${this.form.id}`, this.form, {
+                router.put(`/admin/parameteruji/${this.form.id}`, this.form, {
                     onSuccess: () => this.closeModal(),
                 });
             } else {
-                router.post("/admin/user", this.form, {
+                router.post("/admin/parameteruji", this.form, {
                     onSuccess: () => this.closeModal(),
                 });
             }
         },
         deleteUser(id) {
             if (confirm("Apakah Anda yakin ingin menghapus user ini?")) {
-                router.delete(`/admin/user/${id}`);
+                router.delete(`/admin/parameteruji/${id}`);
             }
         },
     }

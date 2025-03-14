@@ -24,8 +24,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        // Route::get('/user', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('user');
         Route::resource('user', \App\Http\Controllers\Admin\UserController::class)->except(['create', 'edit', 'show']);
+        Route::resource('pemeriksaankategori', \App\Http\Controllers\Admin\PemeriksaanKategoriController::class)->except(['create', 'edit', 'show']);
+        Route::resource('parameteruji', \App\Http\Controllers\Admin\ParameterUjiController::class)->except(['create', 'edit', 'show']);
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

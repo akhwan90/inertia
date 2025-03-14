@@ -35,6 +35,8 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-else>
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">Dashboard</NavLink>
                                 <NavLink :href="route('admin.user.index')" :active="route().current('admin.user')">User</NavLink>
+                                <NavLink :href="route('admin.pemeriksaankategori.index')" :active="route().current('admin.pemeriksaankategori')">Kategori Pemeriksaan</NavLink>
+                                <NavLink :href="route('admin.parameteruji.index')" :active="route().current('admin.parameteruji')">Parameter Uji</NavLink>
                             </div>
                         </div>
 
